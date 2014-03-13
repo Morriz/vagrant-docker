@@ -24,6 +24,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "bootstrap.sh"
 
   config.vm.provision "docker" do |d|
+    d.pull_images "busybox"
     d.pull_images "lopter/collectd-graphite"
     d.pull_images "arcus/elasticsearch"
     d.pull_images "arcus/logstash"

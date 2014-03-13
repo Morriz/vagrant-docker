@@ -44,7 +44,7 @@ The DOCKER_DIR could be pointing to a git clone of these used docker files:
     
 ## Go see the apps that run out of the box
 
-* [morriz/tomcat](http://vagrant.dev:8080)
+* [morriz/tomcat](http://vagrant.dev:8080) (will not have an app to run yet, since we mounted the empty /data/tomcat)
 * [arcus/kibana](http://vagrant.dev)
 * [lopter/collectd-graphite](http://vagrant.dev:8081)
         

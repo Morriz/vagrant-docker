@@ -41,4 +41,10 @@ The DOCKER_DIR could be pointing to a git clone of these used docker files:
 ## When not running
 
     bin/boot.sh
+    
+## Go see the apps that run out of the box
 
+* [morriz/tomcat](http://vagrant.dev:8080)
+* [arcus/kibana](http://vagrant.dev)
+* [lopter/collectd-graphite](http://vagrant.dev:8081)
+        

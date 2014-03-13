@@ -41,4 +41,4 @@ The DOCKER_DIR could be pointing to a git clone of these used docker files:
 ## When not running
 
     bin/boot.sh
-        
+

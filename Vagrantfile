@@ -3,31 +3,34 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "saucy64"
-  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/saucy/current/saucy-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box = "99designs/ubuntu-saucy-docker"
 
   config.vm.hostname = "vagrant.dev"
   config.vm.network :private_network, ip: "192.168.65.2"
+
+  config.vm.provider :virtualbox do |v|
+    v.name = "vagrant-docker"
+    v.memory = 4096
+    v.cpus = 4
+    v.customize ["modifyvm", :id, "--cpuexecutioncap", "70"]
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
 
   if Vagrant.has_plugin?("vagrant-hostsupdater")
     config.hostsupdater.remove_on_suspend = false
   end
 
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :box
-    config.cache.synced_folder_opts = {
-      type: :nfs,
-      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-    }
-  end
-
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   config.vm.provision "shell", path: "bootstrap.sh"
 
-  # install docker daemon
-  config.vm.provision "docker"
-
-  # dns fix
-#  config.vm.provision "shell", inline: "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
+  config.vm.provision "docker" do |d|
+    d.pull_images "lopter/collectd-graphite"
+    d.pull_images "arcus/elasticsearch"
+    d.pull_images "arcus/logstash"
+    d.pull_images "arcus/kibana"
+    d.pull_images "morriz/mysql"
+    d.pull_images "morriz/tomcat"
+  end
 
   # frontend development? > mount host backend folder and install tools
   unless (ENV['FRONTEND_DIR'] || "").empty?
@@ -41,9 +44,10 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "backend-dev.sh"
   end
 
-  # mount host docker folder if asked for
+  # docker development? > mount host docker folder if asked for
   unless (ENV['DOCKER_DIR'] || "").empty?
     config.vm.synced_folder ENV['DOCKER_DIR'], "/docker"
   end
 
 end
+

@@ -1,12 +1,13 @@
 #!/bin/sh
 
-# Update packages and install repos
-add-apt-repository ppa:webupd8team/java
-apt-get update
+# Oracle Java repo
+add-apt-repository -y ppa:webupd8team/java
+apt-get -q -y update
 
-# install java tools
-apt-get install -y oracle-java7-installer oracle-java7-set-default maven
+echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
-# copy casengo settings
-cp /vagrant/.m2/settings.xml /home/vagrant/.m2/
-chown vagrant:vagrant /home/vagrant/.m2/settings.xml
+apt-get -y install oracle-java7-installer maven
+
+echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment;
+export JAVA_HOME=/usr/lib/jvm/java-7-oracle/

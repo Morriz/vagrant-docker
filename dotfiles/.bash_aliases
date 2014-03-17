@@ -22,14 +22,28 @@ alias sws2="sudo python -m SimpleHTTPServer 82"
 alias cdb="cd /backend"
 alias cdf="cd /frontend"
 alias cdd="cd /docker"
+alias cdv="cd /vagrant"
 
 # docker
 alias dp="docker ps"
 alias dpa="docker ps -a"
 alias di="docker images"
+alias drs="docker restart"
 alias ds="docker stop"
 alias dsa="docker stop \$(docker ps | awk '{if (\$1 !=\"CONTAINER\") print \$1}')"
 alias dr="docker rm"
 alias dri="docker rmi"
 alias dc="docker rm \$(docker ps -notrunc -a -q)"
 alias dci="docker rmi \$(docker images | grep \"^<none>\" | awk '{if (\$1 !=\"REPOSITORY\") print \$3}')"
+
+# pub key transfer
+alias k="/vagrant/bin/key.sh"
+
+# ssh shortcut
+alias s="ssh root@localhost -p"
+
+# maven install without testing
+alias m="maven -Dmaven.test.skip=true install"
+
+# tomcat deploy
+alias t="curl -T /backend/target/LC7G.war http://deploy:deploy@localhost:8080/manager/text/deploy?path=/ROOT&war=LC7G.war&update=true"

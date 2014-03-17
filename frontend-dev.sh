@@ -11,8 +11,7 @@ apt-get install -y git-core ruby rubygems nodejs
 ln -s /usr/bin/nodejs /usr/bin/node
 
 # Install npm globals
-npm install bower -g
-npm install grunt-cli -g
+npm install -g bower grunt-cli
 
 # install compass and plugins
 gem install compass normalize-scss

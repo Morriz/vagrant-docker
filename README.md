@@ -42,6 +42,10 @@ The DOCKER_DIR could be pointing to a git clone of these used docker files:
 
     bin/boot.sh
     
+## Init mysql data for the first and only time
+
+    bin/init-mysql-data.sh
+    
 ## Go see the apps that run out of the box
 
 * [morriz/tomcat](http://vagrant.dev:8080) (will not have an app to run yet, since we mounted the empty /data/tomcat)

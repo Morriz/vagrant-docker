@@ -1,13 +1,40 @@
 #!/bin/sh
 
-# Oracle Java repo
-add-apt-repository -y ppa:webupd8team/java
-apt-get -q -y update
+# since webupd8 repo is broken: download manually and run this script
+FILE="jdk-7u51-linux-x64.tar.gz"
+JDK="jdk1.7.0_51"
 
-echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+tar zxvf /vagrant/$FILE
 
-apt-get -y install oracle-java7-installer maven
+sudo mkdir -p /usr/local/java
+sudo mv $JDK /usr/local/java
 
-echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment;
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle/
+JAVA_HOME="/usr/local/java/$JDK"
+
+sudo cat << EOF > /etc/profile.d/java.sh
+JAVA_HOME=$JAVA_HOME
+PATH=$PATH:$JAVA_HOME/bin
+export JAVA_HOME
+export PATH
+EOF
+
+# update alternatives
+sudo update-alternatives --install "/usr/bin/java" "java" "$JAVA_HOME/bin/java" 1
+sudo update-alternatives --set java $JAVA_HOME/bin/java
+sudo update-alternatives --install "/usr/bin/javac" "javac" "$JAVA_HOME/bin/javac" 1
+sudo update-alternatives --set javac $JAVA_HOME/bin/javac
+
+# ubuntu 13.10 has serious problems installing maven 3
+# install also maven from source
+wget http://apache.mirrors.timporter.net/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz
+tar -xzvf apache-maven-3.1.1-bin.tar.gz
+sudo mkdir -p /usr/local/apache-maven
+sudo mv apache-maven-3.1.1 /usr/local/apache-maven/
+
+sudo tee /etc/profile.d/maven.sh << 'EOF'
+export M2_HOME=/usr/local/apache-maven/apache-maven-3.1.1
+export M2=$M2_HOME/bin
+export MAVEN_OPTS="-Xms256m -Xmx512m"
+export PATH=$M2:$PATH
+EOF
+
